@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Loader from "./Loader";
 import './App.css'
 import nithinImg from './assets/Screenshot_2024-03-18_203427-removebg-preview.png'
+import emailjs from 'emailjs-com';
+import { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY } from './emailjsConfig';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -29,6 +31,22 @@ function App() {
     setActiveSection(sectionId)
     document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' })
   }
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    emailjs.sendForm(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      e.target,
+      EMAILJS_PUBLIC_KEY
+    )
+    .then((result) => {
+        alert('Message sent!');
+    }, (error) => {
+        alert('Failed to send message.');
+    });
+    e.target.reset();
+  };
 
   return (
     <div className="app">
@@ -129,32 +147,45 @@ function App() {
       {/* Education Section */}
       <section id="education" className="section education-section">
         <div className="container">
-          <h2 className="section-title">Education</h2>
-          <div className="education-tree">
-            <ul>
+          <h2 className="section-title" style={{ textAlign: "center" }}>Education</h2>
+          <div className="education-tree" style={{ display: "flex", justifyContent: "center" }}>
+            <ul className="edu-tree-root">
               <li>
-                <span className="edu-level">B.Tech (2022-2026)</span>
+                <div className="edu-card edu-card-tree">
+                  <div className="edu-card-inner">
+                    <span className="edu-level">B.Tech (2022-2026)</span>
+                    <div className="edu-details">
+                      <span className="edu-detail">Madanapalle Institute of Technology & Science</span>
+                      <span className="edu-detail">CGPA: 9.15</span>
+                    </div>
+                  </div>
+                </div>
                 <ul>
                   <li>
-                    <span className="edu-detail">Madanapalle Institute of Technology & Science</span>
-                    <span className="edu-detail">CGPA: 9.15</span>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <span className="edu-level">Intermediate</span>
-                <ul>
-                  <li>
-                    <span className="edu-detail">Percentage: 94%</span>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <span className="edu-level">SSC</span>
-                <ul>
-                  <li>
-                    <span className="edu-detail">School Name (Add your school)</span>
-                    <span className="edu-detail">Year (Add year)</span>
+                    <div className="edu-card edu-card-tree">
+                      <div className="edu-card-inner">
+                        <span className="edu-level">Intermediate</span>
+                        <div className="edu-details">
+                          <span className="edu-detail">Narayana Junior College</span>
+                          <span className="edu-detail">2020-2022</span>
+                          <span className="edu-detail">Percentage: 94%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <ul>
+                      <li>
+                        <div className="edu-card edu-card-tree">
+                          <div className="edu-card-inner">
+                            <span className="edu-level">SSC</span>
+                            <div className="edu-details">
+                              <span className="edu-detail">Sri Sangameswara High School</span>
+                              <span className="edu-detail">2020</span>
+                              <span className="edu-detail">Percentage: 100%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>
@@ -171,24 +202,25 @@ function App() {
             <div className="skill-category">
               <h3>Languages</h3>
               <div className="skills-list">
-                {['Java', 'Python', 'HTML', 'CSS', 'JavaScript', 'SQL'].map((skill) => (
-                  <div key={skill} className="skill-item">
-                    <span className="skill-name">{skill}</span>
-                    <div className="skill-bar">
-                      <div className="skill-progress" style={{width: '90%'}}></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Frameworks & Tools</h3>
-              <div className="skills-list">
-                {['Node.js', 'Express.js', 'MongoDB', 'Git', 'Docker'].map((skill) => (
-                  <div key={skill} className="skill-item">
-                    <span className="skill-name">{skill}</span>
-                    <div className="skill-bar">
-                      <div className="skill-progress" style={{width: '85%'}}></div>
+                {[
+                  { name: 'Java', stars: 4 },
+                  { name: 'Python', stars: 4},
+                  { name: 'HTML', stars: 4 },
+                  { name: 'CSS', stars: 4 },
+                  { name: 'JavaScript', stars: 2 },
+                  { name: 'SQL', stars: 3 }
+                ].map((skill) => (
+                  <div key={skill.name} className="skill-item">
+                    <span className="skill-name">{skill.name}</span>
+                    <div className="skill-stars">
+                      {[...Array(5)].map((_, i) => (
+                        <span
+                          key={i}
+                          className={`star${i < skill.stars ? ' filled' : ''}`}
+                          role="img"
+                          aria-label={i < skill.stars ? "filled star" : "empty star"}
+                        >★</span>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -197,11 +229,21 @@ function App() {
             <div className="skill-category">
               <h3>Other Interests</h3>
               <div className="skills-list">
-                {['Frontend Development', 'Machine Learning'].map((skill) => (
-                  <div key={skill} className="skill-item">
-                    <span className="skill-name">{skill}</span>
-                    <div className="skill-bar">
-                      <div className="skill-progress" style={{width: '80%'}}></div>
+                {[
+                  { name: 'Frontend Development', stars: 4 },
+                  { name: 'Machine Learning', stars: 3 }
+                ].map((skill) => (
+                  <div key={skill.name} className="skill-item">
+                    <span className="skill-name">{skill.name}</span>
+                    <div className="skill-stars">
+                      {[...Array(5)].map((_, i) => (
+                        <span
+                          key={i}
+                          className={`star${i < skill.stars ? ' filled' : ''}`}
+                          role="img"
+                          aria-label={i < skill.stars ? "filled star" : "empty star"}
+                        >★</span>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -214,7 +256,7 @@ function App() {
       {/* Projects Section */}
       <section id="projects" className="section projects-section">
         <div className="container">
-          <h2 className="section-title">Featured Projects</h2>
+          <h2 className="section-title">My Projects</h2>
           <div className="projects-grid">
             {[
               {
@@ -306,18 +348,18 @@ function App() {
               </div>
             </div>
             <div className="contact-form">
-              <form>
+              <form onSubmit={sendEmail}>
                 <div className="form-group">
                   <label>Name</label>
-                  <input type="text" placeholder="Your name" />
+                  <input type="text" name="user_name" placeholder="Your name" required />
                 </div>
                 <div className="form-group">
                   <label>Email</label>
-                  <input type="email" placeholder="your.email@example.com" />
+                  <input type="email" name="user_email" placeholder="your.email@example.com" required />
                 </div>
                 <div className="form-group">
                   <label>Message</label>
-                  <textarea placeholder="Your message..." rows="4"></textarea>
+                  <textarea name="message" placeholder="Your message..." rows="4" required></textarea>
                 </div>
                 <button type="submit" className="btn btn-primary">Send Message</button>
               </form>
