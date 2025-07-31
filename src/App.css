@@ -459,9 +459,12 @@ body {
 }
 
 .skill-category h3 {
-  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-  margin-bottom: 1.5rem;
-  color: #ffffff;
+  color: #00d4ff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+  text-shadow: 0 2px 8px #00d4ff22;
+  letter-spacing: 1px;
 }
 
 .skills-list {
